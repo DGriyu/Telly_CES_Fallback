@@ -148,7 +148,6 @@ class AudioPlayer(
         while (offset < data.size) {
             val result = track.write(data, offset, data.size - offset)
             if (result <= 0) {
-                // Typically indicates an error or that the buffer is full in non-blocking mode
                 Log.e("AudioPlayer", "AudioTrack write returned: $result")
                 break
             }
@@ -199,7 +198,6 @@ class AudioPlayer(
                 val chunk = ByteArray(chunkSize)
                 System.arraycopy(audioData.audioData, offset, chunk, 0, currentChunkSize)
 
-                // Create new audio event for each chunk
                 val chunkEvent = AudioEvent.Success(
                     eventId = localId + (offset / chunkSize),
                     audioData = chunk,
@@ -214,7 +212,6 @@ class AudioPlayer(
     }
 
     fun release() {
-        // Guard against double-release
         if (isReleased.getAndSet(true)) return
 
         playbackScope.cancel()
