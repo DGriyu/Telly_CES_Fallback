@@ -123,7 +123,7 @@ class ConversationalWebSocket(
             }.toString()
 
             webSocket?.send(message)
-           // Log.d("ConversationalWebSocket","Sent audio data: ${audioData.size} bytes")
+           //Log.d("ConversationalWebSocket","Sent audio data: ${audioData.size} bytes")
         } catch (e: Exception) {
             Log.e("ConversationalWebSocket", "Error sending audio data", e)
         }

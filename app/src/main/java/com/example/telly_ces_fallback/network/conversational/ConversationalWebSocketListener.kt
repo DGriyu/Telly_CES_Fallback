@@ -127,10 +127,7 @@ class ConversationalWebSocketListener(
             val eventId = audioEvent.getLong("event_id")
 
             Log.d("ConversationalWebSocketListener", "Processing audio event #$eventId")
-
             val audioData = Base64.decode(audioBase64, Base64.DEFAULT)
-            Log.d("ConversationalWebSocketListener", "Decoded audio data: ${audioData.size} bytes")
-
             if (audioData.isEmpty()) {
                 Log.w("ConversationalWebSocketListener", "Received empty audio data for event #$eventId")
             }

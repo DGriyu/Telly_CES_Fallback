@@ -90,7 +90,6 @@ class AudioRecorder(
         Log.d("AudioRecorder", "AudioRecorder resources released")
     }
 
-
     private fun addDebugMessage(message: String) {
         val currentMessages = _state.value.debugMessages.toMutableList()
         currentMessages.add(message)

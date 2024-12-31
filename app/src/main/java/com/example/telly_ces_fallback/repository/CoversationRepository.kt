@@ -14,7 +14,6 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -23,7 +22,7 @@ import javax.inject.Singleton
 class ConversationRepository @Inject constructor(
     private val webSocket: ConversationalWebSocket,
     private val audioPlayer: AudioPlayer,
-    private val audioRecorder: AudioRecorder
+    private val audioRecorder: AudioRecorder,
 ) {
     private val repositoryScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
@@ -65,7 +64,6 @@ class ConversationRepository @Inject constructor(
                             Log.d("ConversationalRepository", "Audio data sent to player")
                             audioPlayer.playAudioData(audioEvent)
                         }
-
                         is AudioEvent.Error -> throw audioEvent.error
                     }
                 }
@@ -74,20 +72,6 @@ class ConversationRepository @Inject constructor(
             }
         }
     }
-
-/**
-    private fun adjustBuffer() {
-        repositoryScope.launch {
-            try {
-                webSocket.ping.onEach {
-                    audioPlayer.adjustBufferSize(it)
-                }
-                Log.d("ConversationalRepository", "Audio buffer adjusted successfully")
-            } catch (e: Exception) {
-                Log.e("ConversationalRepository", "Failed to adjust audio buffer", e)
-            }
-        }
-    }*/
 
     private fun releaseAudioPlayer() = repositoryScope.launch { audioPlayer.release() }
 

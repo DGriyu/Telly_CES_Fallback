@@ -1,5 +1,6 @@
 package com.example.telly_ces_fallback.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -12,8 +13,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.telly_ces_fallback.R
 import com.example.telly_ces_fallback.ui.components.LoadingDots
 import com.example.telly_ces_fallback.ui.components.ScrollingTextBox
 import com.example.telly_ces_fallback.ui.components.TellyAIIcon
