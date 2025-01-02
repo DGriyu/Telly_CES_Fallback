@@ -3,7 +3,7 @@
     <style name="AppTheme.Telly_CES_Fallback" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/transparent_background</item>
         <item name="android:windowIsTranslucent">true</item>
-        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowBlurBehindRadius">5dp</item>
         <item name="android:backgroundDimAmount">0.5</item>
         <item name="android:windowBlurBehindEnabled">true</item>
