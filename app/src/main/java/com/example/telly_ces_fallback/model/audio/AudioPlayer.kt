@@ -1,4 +1,4 @@
-package com.example.telly_ces_fallback.model
+package com.example.telly_ces_fallback.model.audio
 
 import android.media.AudioAttributes
 import android.media.AudioFormat
@@ -151,7 +151,13 @@ class AudioPlayer(
                 val chunk = ByteArray(currSize)
                 System.arraycopy(audioData.audioData, offset, chunk, 0, currSize)
 
-                jitterBuffer.offer(AudioEvent.Success(audioData.eventId, chunk, audioData.arrivalTime))
+                jitterBuffer.offer(
+                    AudioEvent.Success(
+                        audioData.eventId,
+                        chunk,
+                        audioData.arrivalTime
+                    )
+                )
 
                 offset += currSize
             }

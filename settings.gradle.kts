@@ -22,10 +22,18 @@ pluginManagement {
     }
 }
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
     repositories {
         google()
         mavenCentral()
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/TeeVeeCorp/telly-partner-sdk")
+            credentials {
+                username = System.getenv("gh_username") ?: "default_username"
+                password = System.getenv("gh_password") ?: "default_password"
+            }
+        }
     }
 }
 

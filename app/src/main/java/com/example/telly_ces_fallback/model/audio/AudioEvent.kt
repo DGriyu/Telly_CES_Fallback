@@ -1,4 +1,4 @@
-package com.example.telly_ces_fallback.model
+package com.example.telly_ces_fallback.model.audio
 
 sealed class AudioEvent {
     data class Success(val eventId: Long, val audioData: ByteArray, val arrivalTime: Long) : AudioEvent()

@@ -1,9 +1,9 @@
 package com.example.telly_ces_fallback.repository
 
 import android.util.Log
-import com.example.telly_ces_fallback.model.AudioEvent
-import com.example.telly_ces_fallback.model.AudioPlayer
-import com.example.telly_ces_fallback.model.AudioRecorder
+import com.example.telly_ces_fallback.model.audio.AudioEvent
+import com.example.telly_ces_fallback.model.audio.AudioPlayer
+import com.example.telly_ces_fallback.model.audio.AudioRecorder
 import com.example.telly_ces_fallback.network.conversational.ConversationalWebSocket
 import com.example.telly_ces_fallback.network.conversational.WebSocketMessage
 import com.example.telly_ces_fallback.network.conversational.ConnectionState

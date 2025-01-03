@@ -58,6 +58,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.volley)
     // AndroidX Compose BOM - Compatible with Android 11
     val composeBom = platform("androidx.compose:compose-bom:2023.06.01")
     implementation(composeBom)
@@ -121,4 +123,8 @@ dependencies {
     implementation(platform("com.squareup.okhttp3:okhttp-bom:4.9.3"))
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
+
+    implementation ("com.airbnb.android:lottie:6.6.2")
+    implementation ("com.airbnb.android:lottie-compose:6.6.2")
+    implementation ("com.teevee.sdk:telly-partner-sdk:3.0.2")
 }

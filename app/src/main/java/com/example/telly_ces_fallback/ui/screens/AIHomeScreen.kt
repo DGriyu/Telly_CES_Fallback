@@ -1,5 +1,9 @@
 package com.example.telly_ces_fallback.ui.screens
 
+import android.util.Log
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -7,14 +11,13 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,8 +25,11 @@ import androidx.compose.ui.unit.dp
 import com.example.telly_ces_fallback.ui.components.LoadingDots
 import com.example.telly_ces_fallback.ui.components.ScrollingTextBox
 import com.example.telly_ces_fallback.ui.components.TellyAIIcon
+import com.example.telly_ces_fallback.ui.theme.DropShadow
+import com.example.telly_ces_fallback.ui.theme.LostConnection
 import com.example.telly_ces_fallback.ui.theme.SurfaceOverlay
 import com.example.telly_ces_fallback.ui.theme.Telly_CES_FallbackTheme
+import com.example.telly_ces_fallback.viewmodel.AIHomeState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,8 +37,10 @@ import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 @Composable
-fun AIHomeScreen(conversationList: StateFlow<List<String>>) {
+fun AIHomeScreen(conversationList: StateFlow<List<String>>, uiState: StateFlow<AIHomeState>) {
     val conversation by conversationList.collectAsState()
+    val ui by uiState.collectAsState()
+    Log.d("AIHomeScreen", "UI State: $ui")
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = SurfaceOverlay
@@ -49,7 +57,7 @@ fun AIHomeScreen(conversationList: StateFlow<List<String>>) {
                         .padding(start = 65.dp),
                     contentAlignment = Alignment.CenterStart
                 ) {
-                    TellyAIIcon()
+                    TellyAIIcon(ui)
                 }
                 Box(
                     modifier = Modifier
@@ -58,8 +66,17 @@ fun AIHomeScreen(conversationList: StateFlow<List<String>>) {
                         .padding(start = 72.dp, end = 72.dp),
                     contentAlignment = Alignment.CenterStart
                 ) {
-                    ScrollingTextBox(messages = conversation)
-                    LoadingDots()
+                    Crossfade(
+                        targetState = ui,
+                        animationSpec = tween(durationMillis = 750, easing = FastOutSlowInEasing),
+                    ) { state ->
+                        when (state) {
+                            is AIHomeState.Error -> Text(text = "Error: ${state.message}", color = LostConnection, modifier = Modifier.align(Alignment.Center))
+                            is AIHomeState.Launching, is AIHomeState.Loading -> LoadingDots()
+                            is AIHomeState.Loading -> LoadingDots()
+                            is AIHomeState.Loaded -> ScrollingTextBox(messages = conversation)
+                        }
+                    }
                 }
             }
         }
@@ -76,7 +93,7 @@ fun AIHomeScreenPreview() {
             "In Elden Ring, dragons are weak to strike damage (hammers, clubs), lightning, and fire. Use these for an edge in battle against them. Want more details?"
         )
     )
-    AIHomeScreen(sampleMessages)
+    AIHomeScreen(sampleMessages, MutableStateFlow(AIHomeState.Loaded))
 }
 
 @Preview(showBackground = true, heightDp = 300)
@@ -125,5 +142,5 @@ fun ScrollingTextBoxPreview() {
         }
     }
 
-    AIHomeScreen(messages)
+    AIHomeScreen(messages, MutableStateFlow(AIHomeState.Loaded))
 }

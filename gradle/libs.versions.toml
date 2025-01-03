@@ -1,6 +1,11 @@
 [versions]
 agp = "8.7.3"
 kotlin = "2.0.0"
+roomKtx = "2.6.1"
+volley = "1.2.1"
+[libraries]
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
+volley = { group = "com.android.volley", name = "volley", version.ref = "volley" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

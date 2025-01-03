@@ -1,4 +1,4 @@
-package com.example.telly_ces_fallback.model
+package com.example.telly_ces_fallback.model.audio
 
 import android.media.AudioFormat
 import android.media.AudioRecord
@@ -18,7 +18,7 @@ class AudioRecorder(
     private val sampleRate: Int = 16000,
     private val channelConfig: Int = AudioFormat.CHANNEL_IN_MONO,
     private val encodingFormat: Int = AudioFormat.ENCODING_PCM_16BIT,
-    private val audioBufferSize: Int = AudioRecord.getMinBufferSize(16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT)
+    private val audioBufferSize: Int = 4000
 ) {
     companion object {
         data class AudioRecorderState(

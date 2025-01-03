@@ -60,7 +60,7 @@ fun ScrollingTextBox(messages: List<String>) {
             .fillMaxSize()
             .padding(16.dp),
         reverseLayout = true,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = if (messages.size == 1) Arrangement.Center else Arrangement.spacedBy(8.dp)
     ) {
         itemsIndexed(lastThreeItems, key = { index, _ -> index }) { i, message ->
             AnimatedMessageItem(i, message)

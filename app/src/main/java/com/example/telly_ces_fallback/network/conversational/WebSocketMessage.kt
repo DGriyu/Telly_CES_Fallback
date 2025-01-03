@@ -1,6 +1,6 @@
 package com.example.telly_ces_fallback.network.conversational
 
-import com.example.telly_ces_fallback.model.AudioEvent
+import com.example.telly_ces_fallback.model.audio.AudioEvent
 import okio.ByteString
 
 sealed class WebSocketMessage {

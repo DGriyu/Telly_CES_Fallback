@@ -19,7 +19,7 @@ class AIHomeActivity : ComponentActivity() {
         viewModel.connectionState
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
-            AIHomeScreen(viewModel.conversation)
+            AIHomeScreen(viewModel.conversation, viewModel.uiState)
 
             DisposableEffect(Unit) {
                 onDispose {

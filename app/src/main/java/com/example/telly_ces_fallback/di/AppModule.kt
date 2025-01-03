@@ -1,15 +1,13 @@
 package com.example.telly_ces_fallback.di
 
-import android.content.Context
 import com.example.telly_ces_fallback.BuildConfig
-import com.example.telly_ces_fallback.model.AudioPlayer
-import com.example.telly_ces_fallback.model.AudioRecorder
+import com.example.telly_ces_fallback.model.audio.AudioPlayer
+import com.example.telly_ces_fallback.model.audio.AudioRecorder
 import com.example.telly_ces_fallback.network.conversational.ConversationalWebSocket
 import com.example.telly_ces_fallback.repository.ConversationRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 

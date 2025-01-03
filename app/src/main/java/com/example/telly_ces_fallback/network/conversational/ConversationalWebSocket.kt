@@ -2,7 +2,7 @@ package com.example.telly_ces_fallback.network.conversational
 
 import android.util.Base64
 import android.util.Log
-import com.example.telly_ces_fallback.model.AudioEvent
+import com.example.telly_ces_fallback.model.audio.AudioEvent
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,10 +38,10 @@ class ConversationalWebSocket(
     private val _connectionState = MutableStateFlow<ConnectionState>(ConnectionState.Disconnected)
     override val connectionState: Flow<ConnectionState> = _connectionState
 
-    private val _messages = Channel<WebSocketMessage>()
+    private val _messages = Channel<WebSocketMessage>(capacity = Channel.BUFFERED)
     override val messages: Flow<WebSocketMessage> = _messages.receiveAsFlow()
 
-    private val _audioMessage = Channel<AudioEvent>()
+    private val _audioMessage = Channel<AudioEvent>(capacity = Channel.BUFFERED)
     override val audioMessage: Flow<AudioEvent> = _audioMessage.receiveAsFlow()
 
     private val _ping = Channel<Long>()
@@ -59,7 +59,7 @@ class ConversationalWebSocket(
             .addHeader("xi-api-key", apiKey)
             .get()
             .build()
-
+        _connectionState.value = ConnectionState.Connecting
         client.newCall(signedUrlRequest).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 _connectionState.value = ConnectionState.Error(e)
@@ -123,7 +123,7 @@ class ConversationalWebSocket(
             }.toString()
 
             webSocket?.send(message)
-           //Log.d("ConversationalWebSocket","Sent audio data: ${audioData.size} bytes")
+           Log.d("ConversationalWebSocket","Sent audio data: ${audioData.size} bytes")
         } catch (e: Exception) {
             Log.e("ConversationalWebSocket", "Error sending audio data", e)
         }

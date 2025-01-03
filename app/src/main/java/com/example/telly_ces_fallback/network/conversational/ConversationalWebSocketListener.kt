@@ -2,7 +2,7 @@ package com.example.telly_ces_fallback.network.conversational
 
 import android.util.Base64
 import android.util.Log
-import com.example.telly_ces_fallback.model.AudioEvent
+import com.example.telly_ces_fallback.model.audio.AudioEvent
 import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
@@ -29,6 +29,7 @@ class ConversationalWebSocketListener(
             val json = JSONObject(text)
             when (json.getString("type")) {
                 "conversation_initiation_metadata" -> {
+                    onConnectionStateChange(ConnectionState.Connected)
                     val metadata = json.getJSONObject("conversation_initiation_metadata_event")
                     val newConversationId = metadata.getString("conversation_id")
                     val audioFormat = metadata.getString("agent_output_audio_format")

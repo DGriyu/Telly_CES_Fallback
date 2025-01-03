@@ -11,9 +11,9 @@ fun Telly_CES_FallbackTheme(
 ) {
     val colorScheme = darkColorScheme(
         background = Color.Transparent,
-        primary = Purple80,
-        secondary = PurpleGrey80,
-        tertiary = Pink80
+        primary = CurrentText,
+        secondary = DropShadow,
+        tertiary = LostConnection
     )
 
     MaterialTheme(
