@@ -2,7 +2,7 @@ import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
-    kotlin("plugin.serialization") version "1.6.21"
+    kotlin("plugin.serialization") version "1.9.10"
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
@@ -110,7 +110,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.2.2")
 
     // Kotlinx Serialization JSON - Compatible with Android 11
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
     // Hilt Libraries - Compatible with Android 11
     implementation("com.google.dagger:hilt-android:2.46")

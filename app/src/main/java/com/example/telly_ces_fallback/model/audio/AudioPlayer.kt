@@ -104,13 +104,13 @@ class AudioPlayer(
                     }
                 } else {
                     // No data yet -> short delay to avoid busy loop
-                    delay(5)
+                    delay(10)
                 }
             }
         }
     }
 
-    fun processPacket(packet: ByteArray): Int {
+    private fun processPacket(packet: ByteArray): Int {
         val track = audioTrack ?: return 0
 
         if (track.playState != AudioTrack.PLAYSTATE_PLAYING) {

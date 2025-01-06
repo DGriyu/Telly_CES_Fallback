@@ -3,6 +3,7 @@ package com.example.telly_ces_fallback.network.conversational
 import android.util.Base64
 import android.util.Log
 import com.example.telly_ces_fallback.model.audio.AudioEvent
+import com.example.telly_ces_fallback.model.knowledge_graph.KnowledgeGraphResult
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,6 +41,9 @@ class ConversationalWebSocket(
 
     private val _messages = Channel<WebSocketMessage>(capacity = Channel.BUFFERED)
     override val messages: Flow<WebSocketMessage> = _messages.receiveAsFlow()
+
+    private val _graphQuery = Channel<KnowledgeGraphResult>(capacity = Channel.BUFFERED)
+    override val graphQuery: Flow<KnowledgeGraphResult> = _graphQuery.receiveAsFlow()
 
     private val _audioMessage = Channel<AudioEvent>(capacity = Channel.BUFFERED)
     override val audioMessage: Flow<AudioEvent> = _audioMessage.receiveAsFlow()
@@ -97,7 +101,11 @@ class ConversationalWebSocket(
 
         webSocket = client.newWebSocket(request, ConversationalWebSocketListener(
             onMessageReceived = { message ->
-                _messages.trySend(message)
+                when (message) {
+                    is WebSocketMessage.Text -> _messages.trySend(message)
+                    is WebSocketMessage.KnowledgeGraph -> _graphQuery.trySend(message.content)
+                    else -> {}
+                }
                                 },
             onAudioReceived = { audioData ->
                 _audioMessage.trySend(audioData)
@@ -171,4 +179,5 @@ interface WebSocketClient {
     val audioMessage: Flow<AudioEvent>
     val ping: Flow<Long>
     val connectionState: Flow<ConnectionState>
+    val graphQuery: Flow<KnowledgeGraphResult>
 }

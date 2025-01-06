@@ -9,6 +9,8 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,6 +25,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
@@ -44,7 +47,11 @@ data class MessageAnimationState(
 fun ScrollingTextBox(messages: List<String>) {
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
-    val lastThreeItems = messages.takeLast(3).reversed()
+    var lastThreeItems = messages.takeLast(3).reversed()
+    if (lastThreeItems.isEmpty()) {
+        lastThreeItems = listOf("Ready")
+    }
+
 
     // Scroll to the latest message
     LaunchedEffect(messages.size) {
@@ -54,16 +61,19 @@ fun ScrollingTextBox(messages: List<String>) {
         }
     }
 
-    LazyColumn(
-        state = listState,
+    Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        reverseLayout = true,
-        verticalArrangement = if (messages.size == 1) Arrangement.Center else Arrangement.spacedBy(8.dp)
+            .fillMaxSize(),
+        verticalArrangement = if (lastThreeItems.size == 1) Arrangement.Center else Arrangement.Top,
     ) {
-        itemsIndexed(lastThreeItems, key = { index, _ -> index }) { i, message ->
-            AnimatedMessageItem(i, message)
+        Row(Modifier.weight(1f)) {
+            if (lastThreeItems.size > 2) { AnimatedMessageItem(2, lastThreeItems[2]) }
+        }
+        Row(Modifier.weight(2f)) {
+            if (lastThreeItems.size > 1) { AnimatedMessageItem(1, lastThreeItems[1]) }
+        }
+        Row(Modifier.weight(4f)) {
+            if (lastThreeItems.isNotEmpty()) { AnimatedMessageItem(0, lastThreeItems[0]) }
         }
     }
 }

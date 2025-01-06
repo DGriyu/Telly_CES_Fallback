@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.telly_ces_fallback.model.knowledge_graph.KnowledgeGraphResult
 import com.example.telly_ces_fallback.network.conversational.ConnectionState
 import com.example.telly_ces_fallback.repository.ConversationRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,6 +22,9 @@ class AIHomeViewModel  @Inject constructor(
     private val _uiState = MutableStateFlow<AIHomeState>(AIHomeState.Launching)
     val uiState: StateFlow<AIHomeState> = _uiState.asStateFlow()
 
+    private val _navigation = MutableStateFlow<KnowledgeGraphResult?>(null)
+    val navigation: StateFlow<KnowledgeGraphResult?> = _navigation.asStateFlow()
+
 
     private val _connectionState = MutableStateFlow<ConnectionState>(ConnectionState.Connecting)
     val connectionState: StateFlow<ConnectionState> = _connectionState.asStateFlow()
@@ -37,6 +41,15 @@ class AIHomeViewModel  @Inject constructor(
             repository.connectWebSocket()
             observeWebSocketEvents()
             observeMessages()
+            observeKnowledgeGraphResults()
+        }
+    }
+
+    private fun observeKnowledgeGraphResults() {
+        viewModelScope.launch {
+            repository.knowledgeGraphResult.collect { result ->
+                _navigation.emit( result )
+            }
         }
     }
 
@@ -70,7 +83,6 @@ class AIHomeViewModel  @Inject constructor(
                     is ConnectionState.Connected -> {
                         repository.startRecording()
                         _uiState.emit(AIHomeState.Loaded)
-                        _conversation.update { listOf("Ready") }
                         Log.d("AIHomeViewModel", "WebSocket connected")
                     }
 

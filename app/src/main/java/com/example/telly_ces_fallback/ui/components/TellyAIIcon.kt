@@ -25,11 +25,12 @@ import com.example.telly_ces_fallback.viewmodel.AIHomeState
 @Composable
 fun TellyAIIcon(
     uiState: AIHomeState,
+    modifier: Modifier = Modifier.width(199.dp).height(199.dp),
     contentDescription: String? = null
 ) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier.width(199.dp).height(199.dp)
+        modifier = modifier
     ) {
         Crossfade(
             targetState = uiState,
@@ -37,28 +38,23 @@ fun TellyAIIcon(
         ) { state ->
             when (state) {
                 is AIHomeState.Error -> {
-                    Image(
-                        painter = painterResource(id = R.drawable.solid_without_glow),
-                        contentDescription = contentDescription,
-                        modifier = Modifier.width(199.dp).height(199.dp)
-                    )
                 }
-                AIHomeState.Loading, AIHomeState.Loaded -> LaunchLogoLottieAnimation( R.raw.telly_idle_anim )
-                AIHomeState.Launching -> LaunchLogoLottieAnimation( R.raw.telly_launch_anim)
+                AIHomeState.Loading, AIHomeState.Loaded -> LaunchLogoLottieAnimation( R.raw.telly_idle_anim, modifier)
+                AIHomeState.Launching -> LaunchLogoLottieAnimation( R.raw.telly_launch_anim, modifier)
             }
         }
     }
 }
 
 @Composable
-fun LaunchLogoLottieAnimation(@RawRes rawRes: Int) {
+fun LaunchLogoLottieAnimation(@RawRes rawRes: Int, modifier: Modifier = Modifier) {
     val composition by rememberLottieComposition(
         LottieCompositionSpec.RawRes(rawRes)
     )
     LottieAnimation(
         composition = composition,
         iterations = LottieConstants.IterateForever,
-        modifier = Modifier.width(199.dp).height(199.dp)
+        modifier = modifier
     )
 }
 

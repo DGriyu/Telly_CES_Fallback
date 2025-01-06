@@ -3,6 +3,8 @@ package com.example.telly_ces_fallback.network.conversational
 import android.util.Base64
 import android.util.Log
 import com.example.telly_ces_fallback.model.audio.AudioEvent
+import com.example.telly_ces_fallback.model.knowledge_graph.KnowledgeGraphResponse
+import kotlinx.serialization.json.Json
 import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
@@ -71,8 +73,20 @@ class ConversationalWebSocketListener(
                     val audioData = handleAudioMessage(text)
                     onAudioReceived(audioData)
                 }
+                "client_tool_call" -> {
+                    val toolCall = json.getJSONObject("client_tool_call")
+                    val toolName = toolCall.getString("tool_name")
+                    val parameters = toolCall.getJSONObject("parameters").getString("result")
+                    Log.d("ConversationalWebSocketListener", "Received client tool call: $toolName with parameters: $parameters")
+                    try {
+                        val parsedResult = Json { ignoreUnknownKeys = true }.decodeFromString<KnowledgeGraphResponse>(parameters).result
+                        onMessageReceived(WebSocketMessage.KnowledgeGraph(parsedResult))
+                    } catch (e: Exception) {
+                        Log.e("ConversationalWebSocketListener", "Error parsing knowledge graph response", e)
+                    }
+                }
                 else -> {
-                    //Log.d("ConversationalWebSocketListener", "Received unhandled message type: ${json.getString("type")}")
+                    Log.d("ConversationalWebSocketListener", "Received unhandled message type: ${json.getString("type")}")
                 }
             }
         } catch (e: Exception) {

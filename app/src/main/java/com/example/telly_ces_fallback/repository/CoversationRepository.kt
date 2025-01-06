@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.telly_ces_fallback.model.audio.AudioEvent
 import com.example.telly_ces_fallback.model.audio.AudioPlayer
 import com.example.telly_ces_fallback.model.audio.AudioRecorder
+import com.example.telly_ces_fallback.model.knowledge_graph.KnowledgeGraphResult
 import com.example.telly_ces_fallback.network.conversational.ConversationalWebSocket
 import com.example.telly_ces_fallback.network.conversational.WebSocketMessage
 import com.example.telly_ces_fallback.network.conversational.ConnectionState
@@ -38,6 +39,8 @@ class ConversationRepository @Inject constructor(
                 else -> "Unhandled message type"
             }
         }
+    val knowledgeGraphResult: Flow<KnowledgeGraphResult> = webSocket.graphQuery
+
 
     // Websocket
     fun connectWebSocket() = repositoryScope.launch { webSocket.connect() }
