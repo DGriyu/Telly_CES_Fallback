@@ -191,6 +191,13 @@ class AudioPlayer(
         Log.d("AudioPlayer", "AudioPlayer released")
     }
 
+    fun reset() {
+        interruptedId = -1
+        jitterBuffer.clear()
+        audioTrack?.flush()
+        Log.w("AudioPlayer", "Resetting AudioPlayer")
+    }
+
     private fun monitorBufferHealth() {
         playbackScope.launch {
             while (isActive) {

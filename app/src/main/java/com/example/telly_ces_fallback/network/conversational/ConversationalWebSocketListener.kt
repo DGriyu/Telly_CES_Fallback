@@ -55,6 +55,7 @@ class ConversationalWebSocketListener(
                     val eventId = interuptionEvent.getLong("event_id")
                     Log.d("ConversationalWebSocketListener", "Received interruption with eventId: $eventId")
                     onAudioReceived(AudioEvent.Success(eventId, ByteArray(0), System.currentTimeMillis(), true))
+                    onMessageReceived(WebSocketMessage.Text("..."))
                 }
                 "user_transcript" -> {
                     val transcriptEvent = json.getJSONObject("user_transcription_event")
@@ -117,7 +118,7 @@ class ConversationalWebSocketListener(
             "ConversationalWebSocketListener",
             "WebSocket closing with code: $code, reason: $reason"
         )
-        onConnectionStateChange(ConnectionState.Closing)
+        onConnectionStateChange(ConnectionState.Closing(code))
     }
 
     override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {

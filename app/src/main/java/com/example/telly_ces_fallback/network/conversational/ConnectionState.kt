@@ -7,6 +7,6 @@ sealed class ConnectionState {
     object Connected : ConnectionState()
     object Disconnected : ConnectionState()
     object Connecting : ConnectionState()
-    object Closing : ConnectionState()
+    data class Closing(val code: Int? = null) : ConnectionState()
     data class Error(val throwable: Throwable) : ConnectionState()
 }

@@ -83,6 +83,9 @@ class ConversationRepository @Inject constructor(
         audioRecorder.onAudioData = { audioData -> sendRecordedAudio(audioData) }
        // adjustBuffer()
     }
+
+    fun resetAudioTrack() = audioPlayer.reset()
+
     private fun stopRecording() = audioRecorder.stopRecording()
     private fun releaseAudioRecorder() = audioRecorder.release()
 

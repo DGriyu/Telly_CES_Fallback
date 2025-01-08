@@ -1,7 +1,6 @@
 package com.example.telly_ces_fallback.viewmodel
 
 import android.util.Log
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.telly_ces_fallback.model.knowledge_graph.KnowledgeGraphResult
@@ -68,6 +67,7 @@ class AIHomeViewModel  @Inject constructor(
                                 event.throwable.message ?: "Unknown error"
                             )
                         }
+                        retryConnection()
                         Log.e(
                             "AIHomeViewModel",
                             "WebSocket error: ${event.throwable}, event: ${event.throwable}"
@@ -76,7 +76,15 @@ class AIHomeViewModel  @Inject constructor(
                     }
 
                     is ConnectionState.Closing -> {
-                        Log.d("AIHomeViewModel", "WebSocket closing")
+                        if (event.code == 1002) {
+                            _uiState.update { AIHomeState.Error("WebSocket Closing, reconnecting...") }
+                            retryConnection()
+                        } else if (event.code == 1011) {
+                            _uiState.update { AIHomeState.Error("WebSocket Closing Time Limit Reached") }
+                        } else {
+                            _uiState.update { AIHomeState.Error("WebSocket Closing") }
+                            Log.d("AIHomeViewModel", "WebSocket closing")
+                        }
 
                     }
 
@@ -88,7 +96,35 @@ class AIHomeViewModel  @Inject constructor(
 
                     is ConnectionState.Disconnected -> {
                         _uiState.update { AIHomeState.Error("WebSocket disconnected") }
+                        retryConnection()
                         Log.d("AIHomeViewModel", "WebSocket disconnected")
+                    }
+                }
+            }
+        }
+    }
+
+    private fun  retryConnection() {
+        viewModelScope.launch {
+            var retryCount = 0
+            val maxRetries = 5
+            val delayTime = 100L
+
+            while (retryCount < maxRetries) {
+                try {
+                    Log.d("AIHomeViewModel", "Retrying WebSocket connection, attempt: ${retryCount + 1}")
+                    _uiState.update { AIHomeState.Loading }
+                    repository.connectWebSocket() // Implement this method in your repository
+                    repository.resetAudioTrack()
+                    break
+                } catch (e: Exception) {
+                    retryCount++
+                    Log.e("AIHomeViewModel", "Retry failed: ${e.message}, attempt: $retryCount")
+                    if (retryCount == maxRetries) {
+                        Log.e("AIHomeViewModel", "Max retry attempts reached")
+                        _uiState.update { AIHomeState.Error("Max retries reached. Could not reconnect.") }
+                    } else {
+                        delay(delayTime)
                     }
                 }
             }
