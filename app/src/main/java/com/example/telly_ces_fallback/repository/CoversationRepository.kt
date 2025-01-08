@@ -64,7 +64,7 @@ class ConversationRepository @Inject constructor(
                     Log.d("ConversationalRepository", "Converstational audio received")
                     when (audioEvent) {
                         is AudioEvent.Success -> {
-                            Log.d("ConversationalRepository", "Audio data sent to player")
+                            Log.i("ConversationalRepository", "Audio data sent to player: $audioEvent")
                             audioPlayer.playAudioData(audioEvent)
                         }
                         is AudioEvent.Error -> throw audioEvent.error

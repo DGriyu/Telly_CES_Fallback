@@ -16,6 +16,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.math.max
 
 class AudioPlayer(
     private val sampleRate: Int = 16000,
@@ -33,6 +34,7 @@ class AudioPlayer(
     private var playbackJob: Job? = null
 
     private val isReleased = AtomicBoolean(false)
+    private var interruptedId: Long = -1
 
     private val playbackScope = CoroutineScope(
         Dispatchers.Default +
@@ -138,11 +140,21 @@ class AudioPlayer(
     }
 
     fun playAudioData(audioData: AudioEvent.Success) {
+        synchronized(bufferLock) {
+            if (audioData.interuption || audioData.eventId <= interruptedId) {
+                jitterBuffer.clear()
+                interruptedId = max(audioData.eventId, interruptedId)
+                audioTrack?.flush()
+                Log.w("AudioPlayer", "Interrupting eventId ${audioData.eventId}")
+                return
+            }
+        }
         if (audioData.audioData.isEmpty()) {
             Log.w("AudioPlayer", "Attempting to play empty audio data")
             return
         }
         synchronized(bufferLock) {
+            Log.w("AudioPlayer", "Starting packet with eventId ${audioData.eventId}")
             val chunkBytes = 960
             var offset = 0
             while (offset < audioData.audioData.size) {

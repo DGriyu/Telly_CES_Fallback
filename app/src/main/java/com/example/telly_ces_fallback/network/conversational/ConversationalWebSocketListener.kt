@@ -50,12 +50,12 @@ class ConversationalWebSocketListener(
                     sendPong(eventId, webSocket)
                     pongTime = System.currentTimeMillis()
                 }
-                /**"interruption" -> {
+                "interruption" -> {
                     val interuptionEvent = json.getJSONObject("interruption_event")
                     val eventId = interuptionEvent.getLong("event_id")
-                    Log.d("ConversationalWebSocketListener", "Received interruption: $eventId")
-                    onMessageReceived(WebSocketMessage.Audio(AudioEvent.Success(eventId, ByteArray(0), true)))
-                }**/
+                    Log.d("ConversationalWebSocketListener", "Received interruption with eventId: $eventId")
+                    onAudioReceived(AudioEvent.Success(eventId, ByteArray(0), System.currentTimeMillis(), true))
+                }
                 "user_transcript" -> {
                     val transcriptEvent = json.getJSONObject("user_transcription_event")
                     val transcript = transcriptEvent.getString("user_transcript")

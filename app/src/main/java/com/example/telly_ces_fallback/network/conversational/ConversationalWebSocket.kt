@@ -48,6 +48,7 @@ class ConversationalWebSocket(
     private val _audioMessage = Channel<AudioEvent>(capacity = Channel.BUFFERED)
     override val audioMessage: Flow<AudioEvent> = _audioMessage.receiveAsFlow()
 
+
     private val _ping = Channel<Long>()
     override val ping: Flow<Long> = _ping.receiveAsFlow()
 
